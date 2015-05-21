@@ -46,7 +46,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             //+ prefix + 'USERS.USER_MEMBERSHIP_LEVEL as _level, '
             + prefix + 'users.registerDate as _joindate, '
             + prefix + 'users.block as _banned, '
-            + prefix + 'CONCAT(users.username, \'@vivaldi.net\') as _email '
+            + prefix + 'users.email as _email '
             //+ prefix + 'USER_PROFILE.USER_SIGNATURE as _signature, '
             //+ prefix + 'USER_PROFILE.USER_HOMEPAGE as _website, '
             //+ prefix + 'USER_PROFILE.USER_OCCUPATION as _occupation, '
