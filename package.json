@@ -1,14 +1,14 @@
 {
-    "name": "nodebb-plugin-import-ubb",
+    "name": "nodebb-plugin-import-kunena",
     "version": "0.1.3",
-    "description": "a UBB forum exporter to import-ready files",
+    "description": "a Kunena forum exporter to import-ready files",
     "main": "./index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/akhoury/nodebb-plugin-import-ubb"
+        "url": "https://github.com/steinarbragi/nodebb-plugin-import-kunena"
     },
     "keywords": [
         "ubb",
@@ -20,12 +20,12 @@
         "import"
     ],
     "author": {
-        "name": "akhoury",
-        "email": "bentael@gmail.com"
+        "name": "steinarbragi",
+        "email": "steinar.bragi@gmail.com"
     },
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/akhoury/nodebb-plugin-import-ubb/issues"
+        "url": "https://github.com/steinarbragi/nodebb-plugin-import-kunena/issues"
     },
     "dependencies": {
         "underscore": "~1.6.0",

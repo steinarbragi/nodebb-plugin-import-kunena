@@ -1,5 +1,5 @@
 
-var	fs = require('fs-extra'),
+var fs = require('fs-extra'),
     marked = require('marked'),
     path = require('path'),
     pkg = fs.readJsonSync(path.join(__dirname + '/../package.json')),

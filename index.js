@@ -3,7 +3,7 @@ var async = require('async');
 var mysql = require('mysql');
 var _ = require('underscore');
 var noop = function(){};
-var logPrefix = '[nodebb-plugin-import-ubb]';
+var logPrefix = '[nodebb-plugin-import-kunena]';
 
 (function(Exporter) {
 
@@ -15,13 +15,13 @@ var logPrefix = '[nodebb-plugin-import-ubb]';
         var _config = {
             host: config.dbhost || config.host || 'localhost',
             user: config.dbuser || config.user || 'root',
-            password: config.dbpass || config.pass || config.password || '',
-            port: config.dbport || config.port || 3306,
-            database: config.dbname || config.name || config.database || 'ubb'
+            password: config.dbpass || config.pass || config.password || 'root',
+            port: config.dbport || config.port || 8889,
+            database: config.dbname || config.name || config.database || 'kunena'
         };
 
         Exporter.config(_config);
-        Exporter.config('prefix', config.prefix || config.tablePrefix || '');
+        Exporter.config('prefix', config.prefix || config.tablePrefix || 'i25V3_');
 
         Exporter.connection = mysql.createConnection(_config);
         Exporter.connection.connect();
@@ -39,26 +39,26 @@ var logPrefix = '[nodebb-plugin-import-ubb]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query = 'SELECT '
-            + prefix + 'USERS.USER_ID as _uid, '
-            + prefix + 'USERS.USER_LOGIN_NAME as _username, '
-            + prefix + 'USERS.USER_DISPLAY_NAME as _alternativeUsername, '
-            + prefix + 'USERS.USER_REGISTRATION_EMAIL as _registrationEmail, '
-            + prefix + 'USERS.USER_MEMBERSHIP_LEVEL as _level, '
-            + prefix + 'USERS.USER_REGISTERED_ON as _joindate, '
-            + prefix + 'USERS.USER_IS_banned as _banned, '
-            + prefix + 'USER_PROFILE.USER_REAL_EMAIL as _email, '
-            + prefix + 'USER_PROFILE.USER_SIGNATURE as _signature, '
-            + prefix + 'USER_PROFILE.USER_HOMEPAGE as _website, '
-            + prefix + 'USER_PROFILE.USER_OCCUPATION as _occupation, '
-            + prefix + 'USER_PROFILE.USER_LOCATION as _location, '
-            + prefix + 'USER_PROFILE.USER_AVATAR as _picture, '
-            + prefix + 'USER_PROFILE.USER_TITLE as _title, '
-            + prefix + 'USER_PROFILE.USER_RATING as _reputation, '
-            + prefix + 'USER_PROFILE.USER_TOTAL_RATES as _profileviews, '
-            + prefix + 'USER_PROFILE.USER_BIRTHDAY as _birthday '
+            + prefix + 'users.id as _uid, '
+            + prefix + 'users.username as _username, '
+            + prefix + 'users.name as _alternativeUsername, '
+            + prefix + 'users.email as _registrationEmail, '
+            //+ prefix + 'USERS.USER_MEMBERSHIP_LEVEL as _level, '
+            + prefix + 'users.registerDate as _joindate, '
+            + prefix + 'users.block as _banned, '
+            + prefix + 'CONCAT(users.username, \'@vivaldi.net\') as _email, '
+            //+ prefix + 'USER_PROFILE.USER_SIGNATURE as _signature, '
+            //+ prefix + 'USER_PROFILE.USER_HOMEPAGE as _website, '
+            //+ prefix + 'USER_PROFILE.USER_OCCUPATION as _occupation, '
+            //+ prefix + 'USER_PROFILE.USER_LOCATION as _location, '
+            //+ prefix + 'USER_PROFILE.USER_AVATAR as _picture, '
+            //+ prefix + 'USER_PROFILE.USER_TITLE as _title, '
+            //+ prefix + 'USER_PROFILE.USER_RATING as _reputation, '
+            //+ prefix + 'USER_PROFILE.USER_TOTAL_RATES as _profileviews, '
+            //+ prefix + 'USER_PROFILE.USER_BIRTHDAY as _birthday '
 
-            + 'FROM ' + prefix + 'USERS, ' + prefix + 'USER_PROFILE '
-            + 'WHERE ' + prefix + 'USERS.USER_ID = ' + prefix + 'USER_PROFILE.USER_ID '
+            + 'FROM ' + prefix + 'users' //, ' + prefix + 'USER_PROFILE '
+            //+ 'WHERE ' + prefix + 'users.id = ' + prefix + 'USER_PROFILE.USER_ID '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
 
@@ -110,11 +110,11 @@ var logPrefix = '[nodebb-plugin-import-ubb]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query = 'SELECT '
-            + prefix + 'FORUMS.FORUM_ID as _cid, '
-            + prefix + 'FORUMS.FORUM_TITLE as _name, '
-            + prefix + 'FORUMS.FORUM_DESCRIPTION as _description, '
-            + prefix + 'FORUMS.FORUM_CREATED_ON as _timestamp '
-            + 'FROM ' + prefix + 'FORUMS '
+            + prefix + 'kunena_categories.id as _cid, '
+            + prefix + 'kunena_categories.name as _name, '
+            + prefix + 'kunena_categories.decsciption as _description, '
+            //+ prefix + 'kunena_categories. as _timestamp '
+            + 'FROM ' + prefix + 'kunena_categories '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
 
@@ -156,44 +156,45 @@ var logPrefix = '[nodebb-plugin-import-ubb]';
         var startms = +new Date();
         var query =
             'SELECT '
-            + prefix + 'TOPICS.TOPIC_ID as _tid, '
+            + prefix + 'KUNENA_TOPICS.ID as _tid, '
 
             // aka category id, or cid
-            + prefix + 'TOPICS.FORUM_ID as _cid, '
+            + prefix + 'KUNENA_TOPICS.CATEGORY_ID as _cid, '
 
             // this is the 'parent-post'
             // see https://github.com/akhoury/nodebb-plugin-import#important-note-on-topics-and-posts
             // I don't really need it since I just do a simple join and get its content, but I will include for the reference
             // remember: this post is EXCLUDED in the getPosts() function
-            + prefix + 'TOPICS.POST_ID as _pid, '
+            + prefix + 'KUNENA_TOPICS.FIRST_POST_ID as _pid, '
 
-            + prefix + 'TOPICS.USER_ID as _uid, '
-            + prefix + 'TOPICS.TOPIC_VIEWS as _viewcount, '
-            + prefix + 'TOPICS.TOPIC_SUBJECT as _title, '
-            + prefix + 'TOPICS.TOPIC_CREATED_TIME as _timestamp, '
+            + prefix + 'KUNENA_USER_TOPICS.USER_ID as _uid, '
+            + prefix + 'KUNENA_TOPICS.VIEWS _viewcount, '
+            + prefix + 'KUNENA_TOPICS.SUBJECT as _title, '
+            + prefix + 'KUNENA_TOPICS.FIRST_POST_TIME as _timestamp, '
 
             // maybe use that to skip
-            + prefix + 'TOPICS.TOPIC_IS_APPROVED as _approved, '
+            //+ prefix + 'TOPICS.TOPIC_IS_APPROVED as _approved, '
 
             // todo:  figure out what this means,
-            + prefix + 'TOPICS.TOPIC_STATUS as _status, '
+            //+ prefix + 'TOPICS.TOPIC_STATUS as _status, '
 
-            + prefix + 'TOPICS.TOPIC_IS_STICKY as _pinned, '
+            //+ prefix + 'TOPICS.TOPIC_IS_STICKY as _pinned, '
 
             // I dont need it, but if it should be 0 per UBB logic, since this post is not replying to anything, it's the parent-post of the topic
-            + prefix + 'POSTS.POST_PARENT_ID as _post_replying_to, '
+            //+ prefix + 'POSTS.POST_PARENT_ID as _post_replying_to, '
 
             // this should be == to the _tid on top of this query
-            + prefix + 'POSTS.TOPIC_ID as _post_tid, '
+            + prefix + 'KUNENA_TOPICS.ID as _post_tid, '
 
             // and there is the content I need !!
-            + prefix + 'POSTS.POST_BODY as _content '
+            + prefix + 'KUNENA_TOPICS.FIRST_POST_MESSAGE as _content '
 
-            + 'FROM ' + prefix + 'TOPICS, ' + prefix + 'POSTS '
+            + 'FROM ' + prefix + 'KUNENA_TOPICS, ' + prefix + 'kunena_user_topics '
+            + 'WHERE' + prefix + 'KUNENA_USER_TOPICS.TOPIC_ID=' + prefix + 'KUNENA_TOPICS.ID'
             // see
-            + 'WHERE ' + prefix + 'TOPICS.TOPIC_ID=' + prefix + 'POSTS.TOPIC_ID '
+            //+ 'WHERE ' + prefix + 'TOPICS.TOPIC_ID=' + prefix + 'POSTS.TOPIC_ID '
             // and this one must be a parent
-            + 'AND ' + prefix + 'POSTS.POST_PARENT_ID=0 '
+            //+ 'AND ' + prefix + 'POSTS.POST_PARENT_ID=0 '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
         if (!Exporter.connection) {
@@ -233,26 +234,27 @@ var logPrefix = '[nodebb-plugin-import-ubb]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query =
-            'SELECT POST_ID as _pid, '
-            + 'POST_PARENT_ID as _post_replying_to, '
-            + 'TOPIC_ID as _tid, '
-            + 'POST_POSTED_TIME as _timestamp, '
+            'SELECT MESSAGES.ID as _pid, '
+            + 'MESSAGES.PARENT as _post_replying_to, '
+            + 'MESSAGES.THREAD as _tid, '
+            + 'MESSAGES.TIME as _timestamp, '
             // not being used
-            + 'POST_SUBJECT as _subject, '
+            + 'MESSAGES.TIME as _subject, '
 
-            + 'POST_BODY as _content, '
-            + 'USER_ID as _uid, '
+            + 'MESSAGES_TEXT.MESSAGE as _content, '
+            + 'MESSAGES.USERID as _uid, '
 
             // I couldn't tell what's the different, they're all HTML to me
-            + 'POST_MARKUP_TYPE as _markup, '
+            //+ 'POST_MARKUP_TYPE as _markup, '
 
             // maybe use this one to skip
-            + 'POST_IS_APPROVED as _approved '
+            //+ 'POST_IS_APPROVED as _approved '
 
-            + 'FROM ' + prefix + 'POSTS '
+            + 'FROM ' + prefix + 'MESSAGES, ' + prefix + 'MESSAGES_TEXT'
+            + 'WHERE ' + prefix + 'MESSAGES.ID=' + prefix 'MESSAGES_TEXT.MESID'
             // this post cannot be a its topic's main post, it MUST be a reply-post
             // see https://github.com/akhoury/nodebb-plugin-import#important-note-on-topics-and-posts
-            + 'WHERE POST_PARENT_ID > 0 '
+            //+ 'WHERE POST_PARENT_ID > 0 '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
 
