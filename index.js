@@ -112,7 +112,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var query = 'SELECT '
             + prefix + 'kunena_categories.id as _cid, '
             + prefix + 'kunena_categories.name as _name, '
-            + prefix + 'kunena_categories.decsciption as _description, '
+            + prefix + 'kunena_categories.decsription as _description, '
             //+ prefix + 'kunena_categories. as _timestamp '
             + 'FROM ' + prefix + 'kunena_categories '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
