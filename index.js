@@ -46,7 +46,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             //+ prefix + 'USERS.USER_MEMBERSHIP_LEVEL as _level, '
             + prefix + 'users.registerDate as _joindate, '
             + prefix + 'users.block as _banned, '
-            + prefix + 'CONCAT(users.username, \'@vivaldi.net\') as _email, '
+            + prefix + 'CONCAT(users.username, \'@vivaldi.net\') as _email '
             //+ prefix + 'USER_PROFILE.USER_SIGNATURE as _signature, '
             //+ prefix + 'USER_PROFILE.USER_HOMEPAGE as _website, '
             //+ prefix + 'USER_PROFILE.USER_OCCUPATION as _occupation, '
@@ -57,7 +57,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             //+ prefix + 'USER_PROFILE.USER_TOTAL_RATES as _profileviews, '
             //+ prefix + 'USER_PROFILE.USER_BIRTHDAY as _birthday '
 
-            + 'FROM ' + prefix + 'users' //, ' + prefix + 'USER_PROFILE '
+            + 'FROM ' + prefix + 'users ' //, ' + prefix + 'USER_PROFILE '
             //+ 'WHERE ' + prefix + 'users.id = ' + prefix + 'USER_PROFILE.USER_ID '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
