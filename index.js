@@ -189,8 +189,8 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             // and there is the content I need !!
             + prefix + 'KUNENA_TOPICS.FIRST_POST_MESSAGE as _content '
 
-            + 'FROM ' + prefix + 'KUNENA_TOPICS, ' + prefix + 'kunena_user_topics '
-            + 'WHERE' + prefix + 'KUNENA_USER_TOPICS.TOPIC_ID=' + prefix + 'KUNENA_TOPICS.ID '
+            + 'FROM ' + prefix + 'KUNENA_TOPICS, ' + prefix + 'KUNENA_USER_TOPICS '
+            + 'WHERE ' + prefix + 'KUNENA_TOPICS.ID=' + prefix + 'KUNENA_USER_TOPICS.TOPIC_ID '
             // see
             //+ 'WHERE ' + prefix + 'TOPICS.TOPIC_ID=' + prefix + 'POSTS.TOPIC_ID '
             // and this one must be a parent
