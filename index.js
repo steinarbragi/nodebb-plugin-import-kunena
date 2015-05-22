@@ -168,7 +168,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             + prefix + 'KUNENA_TOPICS.FIRST_POST_ID as _pid, '
 
             + prefix + 'KUNENA_USER_TOPICS.USER_ID as _uid, '
-            + prefix + 'KUNENA_TOPICS.VIEWS as _viewcount, '
+            + prefix + 'KUNENA_TOPICS.HITS as _viewcount, '
             + prefix + 'KUNENA_TOPICS.SUBJECT as _title, '
             + prefix + 'KUNENA_TOPICS.FIRST_POST_TIME as _timestamp, '
 
