@@ -234,15 +234,15 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query =
-            'SELECT MESSAGES.ID as _pid, '
-            + 'MESSAGES.PARENT as _post_replying_to, '
-            + 'MESSAGES.THREAD as _tid, '
-            + 'MESSAGES.TIME as _timestamp, '
+            'SELECT KUNENA_MESSAGES.ID as _pid, '
+            + 'KUNENA_MESSAGES.PARENT as _post_replying_to, '
+            + 'KUNENA_MESSAGES.THREAD as _tid, '
+            + 'KUNENA_MESSAGES.TIME as _timestamp, '
             // not being used
-            + 'MESSAGES.TIME as _subject, '
+            + 'KUNENA_MESSAGES.TIME as _subject, '
 
-            + 'MESSAGES_TEXT.MESSAGE as _content, '
-            + 'MESSAGES.USERID as _uid '
+            + 'KUNENA_MESSAGES_TEXT.MESSAGE as _content, '
+            + 'KUNENA_MESSAGES.USERID as _uid '
 
             // I couldn't tell what's the different, they're all HTML to me
             //+ 'POST_MARKUP_TYPE as _markup, '
@@ -250,8 +250,8 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             // maybe use this one to skip
             //+ 'POST_IS_APPROVED as _approved '
 
-            + 'FROM ' + prefix + 'MESSAGES, ' + prefix + 'MESSAGES_TEXT '
-            + 'WHERE ' + prefix + 'MESSAGES.ID=' + prefix + 'MESSAGES_TEXT.MESID '
+            + 'FROM ' + prefix + 'KUNENA_MESSAGES, ' + prefix + 'KUNENA_MESSAGES_TEXT '
+            + 'WHERE ' + prefix + 'KUNENA_MESSAGES.ID=' + prefix + 'KUNENA_MESSAGES_TEXT.MESID '
             // this post cannot be a its topic's main post, it MUST be a reply-post
             // see https://github.com/akhoury/nodebb-plugin-import#important-note-on-topics-and-posts
             //+ 'WHERE POST_PARENT_ID > 0 '
