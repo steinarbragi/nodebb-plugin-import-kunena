@@ -242,7 +242,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             + 'MESSAGES.TIME as _subject, '
 
             + 'MESSAGES_TEXT.MESSAGE as _content, '
-            + 'MESSAGES.USERID as _uid, '
+            + 'MESSAGES.USERID as _uid '
 
             // I couldn't tell what's the different, they're all HTML to me
             //+ 'POST_MARKUP_TYPE as _markup, '
