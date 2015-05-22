@@ -250,8 +250,8 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             // maybe use this one to skip
             //+ 'POST_IS_APPROVED as _approved '
 
-            + 'FROM ' + prefix + 'MESSAGES, ' + prefix + 'MESSAGES_TEXT'
-            + 'WHERE ' + prefix + 'MESSAGES.ID=' + prefix + 'MESSAGES_TEXT.MESID'
+            + 'FROM ' + prefix + 'MESSAGES, ' + prefix + 'MESSAGES_TEXT '
+            + 'WHERE ' + prefix + 'MESSAGES.ID=' + prefix + 'MESSAGES_TEXT.MESID '
             // this post cannot be a its topic's main post, it MUST be a reply-post
             // see https://github.com/akhoury/nodebb-plugin-import#important-note-on-topics-and-posts
             //+ 'WHERE POST_PARENT_ID > 0 '
