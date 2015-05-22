@@ -234,15 +234,15 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query =
-            'SELECT KUNENA_MESSAGES.ID as _pid, '
-            + 'KUNENA_MESSAGES.PARENT as _post_replying_to, '
-            + 'KUNENA_MESSAGES.THREAD as _tid, '
-            + 'KUNENA_MESSAGES.TIME as _timestamp, '
+            'SELECT ' + prefix + 'KUNENA_MESSAGES.ID as _pid, '
+            + prefix + 'KUNENA_MESSAGES.PARENT as _post_replying_to, '
+            + prefix + 'KUNENA_MESSAGES.THREAD as _tid, '
+            + prefix + 'KUNENA_MESSAGES.TIME as _timestamp, '
             // not being used
-            + 'KUNENA_MESSAGES.TIME as _subject, '
+            + prefix + 'KUNENA_MESSAGES.TIME as _subject, '
 
-            + 'KUNENA_MESSAGES_TEXT.MESSAGE as _content, '
-            + 'KUNENA_MESSAGES.USERID as _uid '
+            + prefix + 'KUNENA_MESSAGES_TEXT.MESSAGE as _content, '
+            + prefix + 'KUNENA_MESSAGES.USERID as _uid '
 
             // I couldn't tell what's the different, they're all HTML to me
             //+ 'POST_MARKUP_TYPE as _markup, '
