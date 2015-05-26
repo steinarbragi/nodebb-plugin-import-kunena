@@ -156,21 +156,21 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var startms = +new Date();
         var query =
             'SELECT '
-            + prefix + 'KUNENA_TOPICS.ID as _tid, '
+            + prefix + 'kunena_topics.id as _tid, '
 
             // aka category id, or cid
-            + prefix + 'KUNENA_TOPICS.CATEGORY_ID as _cid, '
+            + prefix + 'kunena_topics.category_id as _cid, '
 
             // this is the 'parent-post'
             // see https://github.com/akhoury/nodebb-plugin-import#important-note-on-topics-and-posts
             // I don't really need it since I just do a simple join and get its content, but I will include for the reference
             // remember: this post is EXCLUDED in the getPosts() function
-            + prefix + 'KUNENA_TOPICS.FIRST_POST_ID as _pid, '
+            + prefix + 'kunena_topics.first_post_id as _pid, '
 
-            + prefix + 'KUNENA_USER_TOPICS.USER_ID as _uid, '
-            + prefix + 'KUNENA_TOPICS.HITS as _viewcount, '
-            + prefix + 'KUNENA_TOPICS.SUBJECT as _title, '
-            + prefix + 'KUNENA_TOPICS.FIRST_POST_TIME as _timestamp, '
+            + prefix + 'kunena_user_topics.user_id as _uid, '
+            + prefix + 'kunena_topics.hits as _viewcount, '
+            + prefix + 'kunena_topics.subject as _title, '
+            + prefix + 'kunena_topics.first_post_time as _timestamp, '
 
             // maybe use that to skip
             //+ prefix + 'TOPICS.TOPIC_IS_APPROVED as _approved, '
@@ -184,13 +184,13 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             //+ prefix + 'POSTS.POST_PARENT_ID as _post_replying_to, '
 
             // this should be == to the _tid on top of this query
-            + prefix + 'KUNENA_TOPICS.ID as _post_tid, '
+            + prefix + 'kunena_topics.id as _post_tid, '
 
             // and there is the content I need !!
-            + prefix + 'KUNENA_TOPICS.FIRST_POST_MESSAGE as _content '
+            + prefix + 'kunena_topics.first_post_message as _content '
 
-            + 'FROM ' + prefix + 'KUNENA_TOPICS, ' + prefix + 'KUNENA_USER_TOPICS '
-            + 'WHERE ' + prefix + 'KUNENA_TOPICS.ID=' + prefix + 'KUNENA_USER_TOPICS.TOPIC_ID '
+            + 'FROM ' + prefix + 'kunena_topics, ' + prefix + 'kunena_user_topics '
+            + 'WHERE ' + prefix + 'kunena_topics.id=' + prefix + 'kunena_user_topics.topic_id '
             // see
             //+ 'WHERE ' + prefix + 'TOPICS.TOPIC_ID=' + prefix + 'POSTS.TOPIC_ID '
             // and this one must be a parent
@@ -234,15 +234,15 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query =
-            'SELECT ' + prefix + 'KUNENA_MESSAGES.ID as _pid, '
-            + prefix + 'KUNENA_MESSAGES.PARENT as _post_replying_to, '
-            + prefix + 'KUNENA_MESSAGES.THREAD as _tid, '
-            + prefix + 'KUNENA_MESSAGES.TIME as _timestamp, '
+            'SELECT ' + prefix + 'kunena_messages.id as _pid, '
+            + prefix + 'kunena_messages.parent as _post_replying_to, '
+            + prefix + 'kunena_messages.thread as _tid, '
+            + prefix + 'kunena_messages.time as _timestamp, '
             // not being used
-            + prefix + 'KUNENA_MESSAGES.TIME as _subject, '
+            + prefix + 'kunena_messages.time as _subject, '
 
-            + prefix + 'KUNENA_MESSAGES_TEXT.MESSAGE as _content, '
-            + prefix + 'KUNENA_MESSAGES.USERID as _uid '
+            + prefix + 'kunena_messages_text.message as _content, '
+            + prefix + 'kunena_messages.userid as _uid '
 
             // I couldn't tell what's the different, they're all HTML to me
             //+ 'POST_MARKUP_TYPE as _markup, '
@@ -250,8 +250,8 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             // maybe use this one to skip
             //+ 'POST_IS_APPROVED as _approved '
 
-            + 'FROM ' + prefix + 'KUNENA_MESSAGES, ' + prefix + 'KUNENA_MESSAGES_TEXT '
-            + 'WHERE ' + prefix + 'KUNENA_MESSAGES.ID=' + prefix + 'KUNENA_MESSAGES_TEXT.MESID '
+            + 'FROM ' + prefix + 'kunena_messages, ' + prefix + 'kunena_messages_text '
+            + 'WHERE ' + prefix + 'kunena_messages.id=' + prefix + 'kunena_messages_text.mesid '
             // this post cannot be a its topic's main post, it MUST be a reply-post
             // see https://github.com/akhoury/nodebb-plugin-import#important-note-on-topics-and-posts
             //+ 'WHERE POST_PARENT_ID > 0 '
