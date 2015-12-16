@@ -25,6 +25,15 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
 
         Exporter.connection = mysql.createConnection(_config);
         Exporter.connection.connect();
+        
+        /* Debugging mysql connection errors
+        var del = Exporter.connection._protocol._delegateError;
+        Exporter.connection._protocol._delegateError = function(err, sequence){
+          if (err.fatal) {
+            console.trace('fatal error: ' + err.message);
+          }
+          return del.call(this, err, sequence);
+        }; */
 
         callback(null, Exporter.config());
     };
@@ -81,13 +90,9 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
                     // nbb forces signatures to be less than 150 chars
                     // keeping it HTML see https://github.com/akhoury/nodebb-plugin-import#markdown-note
                     row._signature = Exporter.truncateStr(row._signature || '', 150);
-    
-                    // from unix timestamp (s) to JS timestamp (ms)
-                    row._joindate = ((row._joindate || 0) * 1000) || startms;
-    
+                    row._joindate = (row._joindate.getTime() || 0) || startms;
                     // lower case the email for consistency
                     row._email = (row._email || '').toLowerCase();
-    
                     // I don't know about you about I noticed a lot my users have incomplete urls, urls like: http://
                     row._picture = Exporter.validateUrl(row._picture);
                     row._website = Exporter.validateUrl(row._website);
@@ -113,7 +118,6 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             + prefix + 'kunena_categories.id as _cid, '
             + prefix + 'kunena_categories.name as _name, '
             + prefix + 'kunena_categories.description as _description '
-            //+ prefix + 'kunena_categories. as _timestamp '
             + 'FROM ' + prefix + 'kunena_categories '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
