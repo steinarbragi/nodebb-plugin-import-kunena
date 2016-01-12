@@ -258,7 +258,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             + 'WHERE ' + prefix + 'kunena_messages.id=' + prefix + 'kunena_messages_text.mesid '
             // this post cannot be a its topic's main post, it MUST be a reply-post
             // see https://github.com/akhoury/nodebb-plugin-import#important-note-on-topics-and-posts
-            //+ 'WHERE POST_PARENT_ID > 0 '
+            + 'AND ' + prefix + 'kunena_messages.parent > 0 '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
 
