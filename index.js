@@ -172,7 +172,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             // remember: this post is EXCLUDED in the getPosts() function
             + prefix + 'kunena_topics.first_post_id as _pid, '
 
-            + prefix + 'kunena_user_topics.user_id as _uid, '
+            + prefix + 'kunena_topics.first_post_userid as _uid, '
             + prefix + 'kunena_topics.hits as _viewcount, '
             + prefix + 'kunena_topics.subject as _title, '
             + prefix + 'kunena_topics.first_post_time as _timestamp, '
