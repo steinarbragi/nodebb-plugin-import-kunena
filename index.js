@@ -118,7 +118,8 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             + prefix + 'kunena_categories.id as _cid, '
             + prefix + 'kunena_categories.name as _name, '
             + prefix + 'kunena_categories.description as _description, '
-            + prefix + 'kunena_categories.parent_id as _parentCid '
+            + prefix + 'kunena_categories.parent_id as _parentCid, '
+            + prefix + 'kunena_categories.alias as _slug '
             + 'FROM ' + prefix + 'kunena_categories '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
@@ -168,7 +169,6 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
 
             // this is the 'parent-post'
             // see https://github.com/akhoury/nodebb-plugin-import#important-note-on-topics-and-posts
-            // I don't really need it since I just do a simple join and get its content, but I will include for the reference
             // remember: this post is EXCLUDED in the getPosts() function
             + prefix + 'kunena_topics.first_post_id as _pid, '
 
@@ -176,30 +176,14 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             + prefix + 'kunena_topics.hits as _viewcount, '
             + prefix + 'kunena_topics.subject as _title, '
             + prefix + 'kunena_topics.first_post_time as _timestamp, '
+            + prefix + 'kunena_categories.alias as _slug,'
+            + prefix + 'kunena_topics.'
 
-            // maybe use that to skip
-            //+ prefix + 'TOPICS.TOPIC_IS_APPROVED as _approved, '
-
-            // todo:  figure out what this means,
-            //+ prefix + 'TOPICS.TOPIC_STATUS as _status, '
-
-            //+ prefix + 'TOPICS.TOPIC_IS_STICKY as _pinned, '
-
-            // I dont need it, but if it should be 0 per UBB logic, since this post is not replying to anything, it's the parent-post of the topic
-            //+ prefix + 'POSTS.POST_PARENT_ID as _post_replying_to, '
-
-            // this should be == to the _tid on top of this query
             + prefix + 'kunena_topics.id as _post_tid, '
-
-            // and there is the content I need !!
             + prefix + 'kunena_topics.first_post_message as _content '
 
-            + 'FROM ' + prefix + 'kunena_topics, ' + prefix + 'kunena_user_topics '
-            + 'WHERE ' + prefix + 'kunena_topics.id=' + prefix + 'kunena_user_topics.topic_id '
-            // see
-            //+ 'WHERE ' + prefix + 'TOPICS.TOPIC_ID=' + prefix + 'POSTS.TOPIC_ID '
-            // and this one must be a parent
-            //+ 'AND ' + prefix + 'POSTS.POST_PARENT_ID=0 '
+            + 'FROM ' + prefix + 'kunena_topics, ' + prefix + 'kunena_categoriess '
+            + 'WHERE ' + prefix + 'kunena_categories.id=' + prefix + 'kunena.topics.category_id'
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
         if (!Exporter.connection) {
@@ -243,17 +227,10 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             + prefix + 'kunena_messages.parent as _post_replying_to, '
             + prefix + 'kunena_messages.thread as _tid, '
             + prefix + 'kunena_messages.time as _timestamp, '
-            // not being used
             + prefix + 'kunena_messages.time as _subject, '
 
             + prefix + 'kunena_messages_text.message as _content, '
             + prefix + 'kunena_messages.userid as _uid '
-
-            // I couldn't tell what's the different, they're all HTML to me
-            //+ 'POST_MARKUP_TYPE as _markup, '
-
-            // maybe use this one to skip
-            //+ 'POST_IS_APPROVED as _approved '
 
             + 'FROM ' + prefix + 'kunena_messages, ' + prefix + 'kunena_messages_text '
             + 'WHERE ' + prefix + 'kunena_messages.id=' + prefix + 'kunena_messages_text.mesid '
