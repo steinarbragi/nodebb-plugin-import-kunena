@@ -176,14 +176,12 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             + prefix + 'kunena_topics.hits as _viewcount, '
             + prefix + 'kunena_topics.subject as _title, '
             + prefix + 'kunena_topics.first_post_time as _timestamp, '
-            + prefix + 'kunena_categories.alias as _slug,'
-            + prefix + 'kunena_topics.'
-
+            + prefix + 'kunena_categories.alias as _slug, '
             + prefix + 'kunena_topics.id as _post_tid, '
             + prefix + 'kunena_topics.first_post_message as _content '
 
-            + 'FROM ' + prefix + 'kunena_topics, ' + prefix + 'kunena_categoriess '
-            + 'WHERE ' + prefix + 'kunena_categories.id=' + prefix + 'kunena.topics.category_id'
+            + 'FROM ' + prefix + 'kunena_topics, ' + prefix + 'kunena_categories '
+            + 'WHERE ' + prefix + 'kunena_categories.id=' + prefix + 'kunena_topics.category_id'
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
         if (!Exporter.connection) {
