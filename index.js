@@ -163,28 +163,24 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query =
-            'SELECT '
-            + prefix + 'kunena_topics.id as _tid, '
+            'SELECT ' +
+             't.id as _tid, ' +
+             't.category_id as _cid, ' +
+             't.first_post_id as _pid, ' +
+             't.first_post_userid as _uid, ' +
+             't.hits as _viewcount, ' +
+             't.subject as _title, ' +
+             't.first_post_time as _timestamp, ' +
+             'c.alias as _slug, ' +
+             't.id as _post_tid, ' +
+             'CONCAT(t.first_post_message, IFNULL( CONCAT("\nAttachments:\n", GROUP_CONCAT("[img]https://forum.vivaldi.net/uploads/attachments/",t.first_post_userid,"/",a.filename,"[/img]")),\'\')) as _content ' +
+             'FROM  (' + prefix + 'kunena_topics t,  ' + prefix + 'kunena_categories c) ' +
+             'LEFT JOIN  ' + prefix + 'kunena_attachments a ON (a.mesid = t.first_post_id) ' +
+             'WHERE  c.id= t.category_id ' +
+             'GROUP BY t.id ' +
+             (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
-            // aka category id, or cid
-            + prefix + 'kunena_topics.category_id as _cid, '
 
-            // this is the 'parent-post'
-            // see https://github.com/akhoury/nodebb-plugin-import#important-note-on-topics-and-posts
-            // remember: this post is EXCLUDED in the getPosts() function
-            + prefix + 'kunena_topics.first_post_id as _pid, '
-
-            + prefix + 'kunena_topics.first_post_userid as _uid, '
-            + prefix + 'kunena_topics.hits as _viewcount, '
-            + prefix + 'kunena_topics.subject as _title, '
-            + prefix + 'kunena_topics.first_post_time as _timestamp, '
-            + prefix + 'kunena_categories.alias as _slug, '
-            + prefix + 'kunena_topics.id as _post_tid, '
-            + prefix + 'kunena_topics.first_post_message as _content '
-
-            + 'FROM ' + prefix + 'kunena_topics, ' + prefix + 'kunena_categories '
-            + 'WHERE ' + prefix + 'kunena_categories.id=' + prefix + 'kunena_topics.category_id '
-            + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
         if (!Exporter.connection) {
             err = {error: 'MySQL connection is not setup. Run setup(config) first'};
