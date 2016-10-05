@@ -1,5 +1,5 @@
 
-var async = require('async');
+ var async = require('async');
 var mysql = require('mysql');
 var _ = require('underscore');
 var noop = function(){};
@@ -53,9 +53,10 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             + prefix + 'users.name as _alternativeUsername, '
             + prefix + 'users.email as _registrationEmail, '
             //+ prefix + 'USERS.USER_MEMBERSHIP_LEVEL as _level, '
-            + prefix + 'users.registerDate as _joindate, '
+            + 'UNIX_TIMESTAMP('+ prefix + 'users.registerDate) as _joindate, '
             + prefix + 'users.block as _banned, '
-            + prefix + 'users.email as _email '
+            + prefix + 'users.email as _email, '
+            + prefix + 'avatars.new_url as _picture '
             //+ prefix + 'USER_PROFILE.USER_SIGNATURE as _signature, '
             //+ prefix + 'USER_PROFILE.USER_HOMEPAGE as _website, '
             //+ prefix + 'USER_PROFILE.USER_OCCUPATION as _occupation, '
@@ -66,8 +67,9 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             //+ prefix + 'USER_PROFILE.USER_TOTAL_RATES as _profileviews, '
             //+ prefix + 'USER_PROFILE.USER_BIRTHDAY as _birthday '
 
-            + 'FROM ' + prefix + 'users ' //, ' + prefix + 'USER_PROFILE '
-            //+ 'WHERE ' + prefix + 'users.id = ' + prefix + 'USER_PROFILE.USER_ID '
+            + 'FROM ' + prefix + 'users, '+ prefix + 'avatars '
+            //+ 'LEFT JOIN '+ prefix + 'avatars ON ('+prefix+'users.id = '+prefix+'avatars.id) '
+            + 'WHERE ' + prefix + 'users.id=' + prefix + 'avatars.id '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
 
@@ -90,7 +92,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
                     // nbb forces signatures to be less than 150 chars
                     // keeping it HTML see https://github.com/akhoury/nodebb-plugin-import#markdown-note
                     row._signature = Exporter.truncateStr(row._signature || '', 150);
-                    row._joindate = (row._joindate.getTime() || 0) || startms;
+                    row._joindate = (new Date(row._joindate) * 1000 || 0) || startms;
                     // lower case the email for consistency
                     row._email = (row._email || '').toLowerCase();
                     // I don't know about you about I noticed a lot my users have incomplete urls, urls like: http://
