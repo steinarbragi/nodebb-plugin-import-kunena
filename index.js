@@ -219,7 +219,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query =
-            'SELECT ' + prefix + 'kunena_messages.id as _pid, ' +
+            'SELECT m.id as _pid, ' +
             'm.parent as _post_replying_to, ' +
             'm.thread as _tid, ' +
             'm.time as _timestamp, ' +
