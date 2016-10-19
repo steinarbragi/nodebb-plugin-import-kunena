@@ -225,7 +225,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             'm.time as _timestamp, ' +
             'm.time as _subject, ' +
             'm.userid as _uid ' +
-            'CONCAT(mt.message, IFNULL( CONCAT("\nAttachments:\n", GROUP_CONCAT("[img]https://forum.vivaldi.net/uploads/attachments/",m.userid,"/",a.filename,"[/img]")),'')) as _content ' +
+            'CONCAT(mt.message, IFNULL( CONCAT("\nAttachments:\n", GROUP_CONCAT("[img]https://forum.vivaldi.net/uploads/attachments/",m.userid,"/",a.filename,"[/img]")),\'\')) as _content ' +
             'FROM (' + prefix + 'kunena_messages m, ' + prefix + 'kunena_messages_text mt) ' +
             'LEFT JOIN  i25V3_kunena_attachments a ON (a.mesid = m.id) ' +
             'WHERE m.id=mt.mesid ' +
