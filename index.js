@@ -219,21 +219,17 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query =
-            'SELECT ' + prefix + 'kunena_messages.id as _pid, '
-            + prefix + 'kunena_messages.parent as _post_replying_to, '
-            + prefix + 'kunena_messages.thread as _tid, '
-            + prefix + 'kunena_messages.time as _timestamp, '
-            + prefix + 'kunena_messages.time as _subject, '
-
-            + prefix + 'kunena_messages_text.message as _content, '
-            + prefix + 'kunena_messages.userid as _uid '
-
-            + 'FROM ' + prefix + 'kunena_messages, ' + prefix + 'kunena_messages_text '
-            + 'WHERE ' + prefix + 'kunena_messages.id=' + prefix + 'kunena_messages_text.mesid '
-            // this post cannot be a its topic's main post, it MUST be a reply-post
-            // see https://github.com/akhoury/nodebb-plugin-import#important-note-on-topics-and-posts
-            + 'AND ' + prefix + 'kunena_messages.parent > 0 '
-            + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
+            'SELECT ' + prefix + 'kunena_messages.id as _pid, ' +
+            'm.parent as _post_replying_to, ' +
+            'm.thread as _tid, ' +
+            'm.time as _timestamp, ' +
+            'm.time as _subject, ' +
+            'mt.message as _content, ' +
+            'm.userid as _uid ' +
+            'FROM ' + prefix + 'kunena_messages m, ' + prefix + 'kunena_messages_text mt ' +
+            'WHERE m.id=mt.mesid ' +
+            'AND m.parent > 0 ' +
+            (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
 
         if (!Exporter.connection) {
