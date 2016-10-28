@@ -50,7 +50,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var query = 'SELECT '
             + prefix + 'users.id as _uid, '
             + prefix + 'users.username as _username, '
-            + prefix + 'LOWER(users.username) as _userslug, '
+            + prefix + 'LOWER(users.username) as _slug, '
             + prefix + 'users.name as _alternativeUsername, '
             + prefix + 'users.email as _registrationEmail, '
             //+ prefix + 'USERS.USER_MEMBERSHIP_LEVEL as _level, '
