@@ -224,6 +224,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             'c.contentid as _tid, ' +
             'UNIX_TIMESTAMP(c.date) as _timestamp, ' +
             'c.userid as _uid, ' +
+            'GREATEST((c.vote_yes - c.vote_no),0) as _reputation, ' +
             'c.comment as _content ' +
             'FROM ' + prefix + 'comment c ' +
             (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
