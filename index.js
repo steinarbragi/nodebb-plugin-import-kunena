@@ -118,12 +118,12 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query = 'SELECT '
-            + prefix + 'kunena_categories.id as _cid, '
-            + prefix + 'kunena_categories.name as _name, '
-            + prefix + 'kunena_categories.description as _description, '
-            + prefix + 'kunena_categories.parent_id as _parentCid, '
-            + prefix + 'kunena_categories.alias as _slug '
-            + 'FROM ' + prefix + 'kunena_categories '
+            + prefix + 'k2_categories.id as _cid, '
+            + prefix + 'k2_categories.name as _name, '
+            //+ prefix + 'k2_categories.description as _description, '
+            + prefix + 'k2_categories.parent as _parentCid, '
+            + prefix + 'k2_categories.alias as _slug '
+            + 'FROM ' + prefix + 'k2_categories '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
 
@@ -165,20 +165,19 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var startms = +new Date();
         var query =
             'SELECT ' +
-             't.id as _tid, ' +
-             't.category_id as _cid, ' +
-             't.first_post_id as _pid, ' +
-             't.first_post_userid as _uid, ' +
-             't.hits as _viewcount, ' +
-             't.subject as _title, ' +
-             't.first_post_time as _timestamp, ' +
+             'k2i.id as _tid, ' +
+             'k2i.catid as _cid, ' +
+             //'k2i.first_post_id as _pid, ' +
+             'k2i.created_by as _uid, ' +
+             'k2i.hits as _viewcount, ' +
+             'k2i.title as _title, ' +
+             'UNIX_TIMESTAMP(k2i.publish_up) as _timestamp, ' +
              'c.alias as _slug, ' +
-             't.id as _post_tid, ' +
-             'CONCAT(t.first_post_message, IFNULL( CONCAT("\nAttachments:\n", GROUP_CONCAT("[img]https://forum.vivaldi.net/uploads/attachments/",t.first_post_userid,"/",a.filename,"[/img]")),\'\')) as _content ' +
-             'FROM  (' + prefix + 'kunena_topics t,  ' + prefix + 'kunena_categories c) ' +
-             'LEFT JOIN  ' + prefix + 'kunena_attachments a ON (a.mesid = t.first_post_id) ' +
-             'WHERE  c.id= t.category_id ' +
-             'GROUP BY t.id ' +
+             'k2i.id as _post_tid, ' +
+             'k2i.fulltext as content ' +
+             'FROM  ' + prefix + 'k2_items k2i,  ' + prefix + 'k2_categories c ' +
+             'WHERE  c.id= k2i.catid ' +
+             'GROUP BY k2i.id ' +
              (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
 
@@ -201,7 +200,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
 
                 rows.forEach(function(row) {
                     row._title = row._title ? row._title[0].toUpperCase() + row._title.substr(1) : 'Untitled';
-                    row._timestamp = ((row._timestamp || 0) * 1000) || startms;
+                    row._timestamp = (new Date(row._timestamp) * 1000 || 0) || startms;
     
                     map[row._tid] = row;
                 });
