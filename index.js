@@ -219,18 +219,13 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query =
-            'SELECT m.id as _pid, ' +
-            'm.parent as _post_replying_to, ' +
-            'm.thread as _tid, ' +
-            'm.time as _timestamp, ' +
-            'm.time as _subject, ' +
-            'm.userid as _uid, ' +
-            'CONCAT(mt.message, IFNULL( CONCAT("\nAttachments:\n", GROUP_CONCAT("[img]https://forum.vivaldi.net/uploads/attachments/",m.userid,"/",a.filename,"[/img]")),\'\')) as _content ' +
-            'FROM (' + prefix + 'kunena_messages m, ' + prefix + 'kunena_messages_text mt) ' +
-            'LEFT JOIN  i25V3_kunena_attachments a ON (a.mesid = m.id) ' +
-            'WHERE m.id=mt.mesid ' +
-            'AND m.parent > 0 ' +
-            'GROUP BY m.id ' +
+            'SELECT c.id as _pid, ' +
+            'c.parentid as _post_replying_to, ' +
+            'c.contentid as _tid, ' +
+            'UNIX_TIMESTAMP(c.date) as _timestamp, ' +
+            'c.userid as _uid, ' +
+            'c.comment as _content ' +
+            'FROM ' + prefix + 'comment c ' +
             (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
 
@@ -251,7 +246,8 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
                 var map = {};
                 rows.forEach(function(row) {
                     row._content = row._content || '';
-                    row._timestamp = ((row._timestamp || 0) * 1000) || startms;
+                    row._timestamp = (new Date(row._timestamp) * 1000 || 0) || startms;
+                    //row._timestamp = ((row._timestamp || 0) * 1000) || startms;
                     map[row._pid] = row;
                 });
 
