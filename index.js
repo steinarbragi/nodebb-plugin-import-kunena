@@ -169,9 +169,11 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
              'k2i.hits as _viewcount, ' +
              'k2i.title as _title, ' +
              'UNIX_TIMESTAMP(k2i.publish_up) as _timestamp, ' +
-             'c.alias as _slug, ' +
+             'c.alias as _cslug, ' +
+             'k2i.alias as _slug, ' +
              'k2i.id as _post_tid, ' +
-             'k2i.fulltext as content ' +
+             'k2i.introtext as intro, ' +
+             'CONCAT(k2i.introtext, "\n\n<a href="http://vivaldicom.dev/", c.alias, "/", k2i.alias, "/\"" , <b>See the full blog post here</b></a>") as _content ' +
              'FROM  ' + prefix + 'k2_items k2i,  ' + prefix + 'k2_categories c ' +
              'WHERE  c.id= k2i.catid ' +
              'GROUP BY k2i.id ' +
@@ -217,7 +219,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var startms = +new Date();
         var query =
             'SELECT c.id as _pid, ' +
-            'c.parentid as _post_replying_to, ' +
+            'c.parentid as _toPid, ' +
             'c.contentid as _tid, ' +
             'UNIX_TIMESTAMP(c.date) as _timestamp, ' +
             'c.userid as _uid, ' +
