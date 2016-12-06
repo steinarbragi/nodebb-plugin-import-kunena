@@ -173,7 +173,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
              'k2i.alias as _slug, ' +
              'k2i.id as _post_tid, ' +
              'k2i.introtext as intro, ' +
-             'CONCAT(k2i.introtext, "\n\n<a href="http://vivaldicom.dev/", c.alias, "/", k2i.alias, "/\"" , <b>See the full blog post here</b></a>") as _content ' +
+             'CONCAT(k2i.introtext, \'\n\n<a href="http://vivaldicom.dev/\', c.alias, \'/\', k2i.alias, \'/"\' , \'<b>See the full blog post here</b></a>\') as _content ' +
              'FROM  ' + prefix + 'k2_items k2i,  ' + prefix + 'k2_categories c ' +
              'WHERE  c.id= k2i.catid ' +
              'GROUP BY k2i.id ' +
@@ -223,7 +223,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             'c.contentid as _tid, ' +
             'UNIX_TIMESTAMP(c.date) as _timestamp, ' +
             'c.userid as _uid, ' +
-            'GREATEST((c.vote_yes - c.vote_no),0) as _reputation, ' +
+            'GREATEST((c.voting_yes - c.voting_no),0) as _reputation, ' +
             'c.comment as _content ' +
             'FROM ' + prefix + 'comment c ' +
             (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
