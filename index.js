@@ -115,10 +115,10 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query = 'SELECT '
-            + prefix + 'k2_categories.id as _cid, '
+            + prefix + 'k2_categories.id + 78 as _cid, '
             + prefix + 'k2_categories.name as _name, '
             //+ prefix + 'k2_categories.description as _description, '
-            + prefix + 'k2_categories.parent as _parentCid, '
+            + prefix + 'k2_categories.parent + 78 as _parentCid, '
             + prefix + 'k2_categories.alias as _slug '
             + 'FROM ' + prefix + 'k2_categories '
             + (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
@@ -162,8 +162,8 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var startms = +new Date();
         var query =
             'SELECT ' +
-             'k2i.id as _tid, ' +
-             'k2i.catid as _cid, ' +
+             'k2i.id + 16044 as _tid, ' +
+             'k2i.catid + 78 as _cid, ' +
              //'k2i.first_post_id as _pid, ' +
              'k2i.created_by as _uid, ' +
              'k2i.hits as _viewcount, ' +
@@ -175,7 +175,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
              'k2i.introtext as intro, ' +
              'CONCAT(k2i.introtext, \'\n\n<a href="http://vivaldicom.dev/\', c.alias, \'/\', k2i.alias, \'/"\' , \'<b>See the full blog post here</b></a>\') as _content ' +
              'FROM  ' + prefix + 'k2_items k2i,  ' + prefix + 'k2_categories c ' +
-             'WHERE  c.id= k2i.catid ' +
+             'WHERE  c.id + 78 = k2i.catid + 78 ' +
              'GROUP BY k2i.id ' +
              (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
@@ -218,9 +218,9 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query =
-            'SELECT c.id as _pid, ' +
-            'c.parentid as _toPid, ' +
-            'c.contentid as _tid, ' +
+            'SELECT c.id + 80132 as _pid, ' +
+            'c.parentid + 80132 as _toPid, ' +
+            'c.contentid + 16044 as _tid, ' +
             'UNIX_TIMESTAMP(c.date) as _timestamp, ' +
             'c.userid as _uid, ' +
             'GREATEST((c.voting_yes - c.voting_no),0) as _reputation, ' +
