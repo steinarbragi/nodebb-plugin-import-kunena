@@ -173,7 +173,7 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
              'k2i.alias as _slug, ' +
              'k2i.id as _post_tid, ' +
              'k2i.introtext as intro, ' +
-             'CONCAT(k2i.introtext, \'\n\n<a href="http://vivaldicom.dev/\', c.alias, \'/\', k2i.alias, \'/"\' , \'<b>See the full blog post here</b></a>\') as _content ' +
+             'CONCAT(k2i.introtext, \'\n\n<a href="https://vivaldi.com/blog/\', c.alias, \'/\', k2i.alias, \'/"\' , \'<b>See the full blog post here</b></a>\') as _content ' +
              'FROM  ' + prefix + 'k2_items k2i,  ' + prefix + 'k2_categories c ' +
              'WHERE  c.id + 78 = k2i.catid + 78 ' +
              'GROUP BY k2i.id ' +
@@ -219,7 +219,12 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var startms = +new Date();
         var query =
             'SELECT c.id + 80132 as _pid, ' +
-            'c.parentid + 80132 as _toPid, ' +
+            '( '+
+            ' CASE ' +
+            '   WHEN c.parentid > 0 ' +
+            '   THEN c.parentid + 80132 ' +
+            '   ELSE 0 ' +
+            ' END) as _toPid, ' +
             'c.contentid + 16044 as _tid, ' +
             'UNIX_TIMESTAMP(c.date) as _timestamp, ' +
             'c.userid as _uid, ' +
