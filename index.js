@@ -231,6 +231,8 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
             'GREATEST((c.voting_yes - c.voting_no),0) as _reputation, ' +
             'c.comment as _content ' +
             'FROM ' + prefix + 'comment c ' +
+            'AND c.deleted = 0 ' +
+            'AND c.published = 1 ' +
             (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
 
 
