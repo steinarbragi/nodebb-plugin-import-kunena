@@ -218,25 +218,25 @@ var logPrefix = '[nodebb-plugin-import-kunena]';
         var prefix = Exporter.config('prefix');
         var startms = +new Date();
         var query =
-            'SELECT c.id + 80132 as _pid,  ' +
+            'SELECT c.id + 80132 as _pid, ' +
             '( ' +
-            ' CASE  ' +
-            '   WHEN c.parentid > 0  ' +
-            '   THEN c.parentid + 80132  ' +
-            '   ELSE 0  ' +
-            ' END) as _toPid,  ' +
-            'c.contentid + 16044 as _tid,  ' +
-            'UNIX_TIMESTAMP(c.date) as _timestamp,  ' +
-            'c.userid as _uid,  ' +
-            'GREATEST((c.voting_yes - c.voting_no),0) as _reputation,  ' +
-            'c.comment as _content,  ' +
+            ' CASE ' +
+            '   WHEN c.parentid > 0 ' +
+            '   THEN c.parentid + 80132 ' +
+            '   ELSE 0 ' +
+            ' END) as _toPid, ' +
+            'c.contentid + 16044 as _tid, ' +
+            'UNIX_TIMESTAMP(c.date) as _timestamp, ' +
+            'c.userid as _uid, ' +
+            'GREATEST((c.voting_yes - c.voting_no),0) as _reputation, ' +
+            'c.comment as _content, ' +
             'r._replies as _replies ' +
-            'FROM '+prefix+'comment c  ' +
+            'FROM '+prefix+'comment c ' +
             'LEFT OUTER JOIN ( ' +
-            '      SELECT count(a.id) as _replies, a.id ' +
+            '      SELECT count(a.id) as _replies, a.parentid ' +
             '      FROM '+prefix+'comment a ' +
             '      GROUP BY a.parentid ' +
-            ') r on r.id = c.id ' +
+            ') r on r.parentid = c.id ' +
             'WHERE c.deleted = 0 ' +
             'AND c.published = 1 ' +
             (start >= 0 && limit >= 0 ? 'LIMIT ' + start + ',' + limit : '');
